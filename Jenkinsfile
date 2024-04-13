@@ -24,16 +24,24 @@ pipeline {
             }
         }
 
+        stage('Check Environment') {
+            steps {
+                script {
+                    dir('LibMan') {
+                        sh 'pwd'
+                        sh 'ls -l build/libs/'
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    try {
+                    dir('LibMan') {
+                        sh './gradlew clean build'
                         echo "Building Docker image ${env.DOCKER_IMAGE}..."
-                        docker.build(env.DOCKER_IMAGE)
-                        echo "Image built successfully."
-                    } catch (Exception e) {
-                        echo "Error building Docker image: ${e.getMessage()}"
-                        throw e // rethrow the error to fail the build
+                        docker.build(env.DOCKER_IMAGE, ".")
                     }
                 }
             }
