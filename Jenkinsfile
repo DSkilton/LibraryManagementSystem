@@ -10,6 +10,7 @@ pipeline {
             steps {
                 script {
                     echo "Current directory: ${pwd()}"
+                    sh 'ls -al' //lists files and their permissions
                 }
             }
         }
@@ -32,8 +33,11 @@ pipeline {
                     dir('librarymanagementsystem') {
                         echo "Checking build environment..."
                         sh 'pwd'
+                        echo "List files and their permissions"
                         sh 'ls -al'
-                        sh 'ls -l build/libs/' 
+
+                        echo "List files and their permissions in build/libs/"
+                        sh 'ls -l build/libs/'
                     }
                 }
             }
