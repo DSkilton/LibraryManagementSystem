@@ -27,6 +27,21 @@ pipeline {
             }
         }
 
+        stage('Verify Gradlew Configuration') {
+            steps {
+                script {
+                    dir('librarymanagementsystem') {
+                        sh '''
+                        echo "Checking gradlew permissions..."
+                        ls -l gradlew
+                        echo "Verifying Gradle wrapper execution..."
+                        ./gradlew --version
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Check Environment') {
             steps {
                 script {
@@ -38,21 +53,6 @@ pipeline {
 
                         echo "List files and their permissions in build/libs/"
                         sh 'ls -l build/libs/'
-                    }
-                }
-            }
-        }
-
-        stage('Verify Gradlew Configuration') {
-            steps {
-                script {
-                    dir('librarymanagementsystem') {
-                        sh '''
-                        echo "Checking gradlew permissions..."
-                        ls -l gradlew
-                        echo "Verifying Gradle wrapper execution..."
-                        ./gradlew --version
-                        '''
                     }
                 }
             }
