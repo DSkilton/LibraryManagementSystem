@@ -6,18 +6,35 @@ pipeline {
     }
 
     stages {
+       stage('Setup Debug') {
+           steps {
+               script {
+                   echo "Current directory: ${pwd()}"
+               }
+           }
+       }
+
         stage('Clone repository') {
             steps {
                 echo 'Cloning the repository...'
-                git 'https://github.com/DSkilton/LibraryManagementSystem'
+                dir('LibMan') {
+                    git branch: 'master',
+                     url: 'https://github.com/DSkilton/LibraryManagementSystem'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image ${env.DOCKER_IMAGE}..."
-                    docker.build(env.DOCKER_IMAGE)
+                    try {
+                        echo "Building Docker image ${env.DOCKER_IMAGE}..."
+                        docker.build(env.DOCKER_IMAGE)
+                        echo "Image built successfully."
+                    } catch (Exception e) {
+                        echo "Error building Docker image: ${e.getMessage()}"
+                        throw e // rethrow the error to fail the build
+                    }
                 }
             }
         }
