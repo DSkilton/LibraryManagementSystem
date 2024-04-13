@@ -6,20 +6,22 @@ pipeline {
     }
 
     stages {
-       stage('Setup Debug') {
-           steps {
-               script {
-                   echo "Current directory: ${pwd()}"
-               }
-           }
-       }
+        stage('Setup Debug') {
+            steps {
+                script {
+                    echo "Current directory: ${pwd()}"
+                }
+            }
+        }
 
         stage('Clone repository') {
             steps {
                 echo 'Cloning the repository...'
                 dir('librarymanagementsystem') {
                     git branch: 'master',
-                     url: 'https://github.com/DSkilton/LibraryManagementSystem'
+                        url: 'https://github.com/DSkilton/LibraryManagementSystem'
+                    echo "Repository cloned."
+                    sh 'ls -l'
                 }
             }
         }
@@ -28,8 +30,10 @@ pipeline {
             steps {
                 script {
                     dir('librarymanagementsystem') {
+                        echo "Checking build environment..."
                         sh 'pwd'
-                        sh 'ls -l build/libs/'
+                        sh 'ls -al'
+                        sh 'ls -l build/libs/' 
                     }
                 }
             }
@@ -38,10 +42,14 @@ pipeline {
         stage('Verify Gradlew Configuration') {
             steps {
                 script {
-                    sh '''
-                    ls -l gradlew
-                    ./gradlew --version
-                    '''
+                    dir('librarymanagementsystem') {
+                        sh '''
+                        echo "Checking gradlew permissions..."
+                        ls -l gradlew
+                        echo "Verifying Gradle wrapper execution..."
+                        ./gradlew --version
+                        '''
+                    }
                 }
             }
         }
@@ -51,11 +59,15 @@ pipeline {
                 script {
                     dir('librarymanagementsystem') {
                         echo "Running Gradle clean build..."
-                        sh './gradlew clean build'
-                        echo "Current directory post-build: ${pwd()}"
-                        sh 'ls -l build/libs/'
+                        sh '''
+                        ./gradlew clean build
+                        echo "Displaying directory structure post-build..."
+                        find . -type f -print
+                        echo "Listing build artifacts..."
+                        ls -l build/libs/
+                        '''
                         echo "Building Docker image ${env.DOCKER_IMAGE}..."
-                        docker.build(env.DOCKER_IMAGE, "build/libs")
+                        docker.build(env.DOCKER_IMAGE, '.')
                     }
                 }
             }
@@ -63,8 +75,13 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                sh './gradlew test'
+                script {
+                    dir('librarymanagementsystem') {
+                        echo "Running tests..."
+                        sh './gradlew test'
+                        echo "Tests completed."
+                    }
+                }
             }
         }
 
@@ -74,6 +91,7 @@ pipeline {
                     echo "Publishing Docker image..."
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         docker.image(env.DOCKER_IMAGE).push()
+                        echo "Docker image published."
                     }
                 }
             }
@@ -81,12 +99,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to Kubernetes...'
                 script {
+                    echo 'Deploying to Kubernetes...'
                     kubernetesDeploy(
                         configs: 'kubeconfig',
                         kubeconfigId: 'kubeconfig-id'
                     )
+                    echo "Deployment to Kubernetes initiated."
                 }
             }
         }
