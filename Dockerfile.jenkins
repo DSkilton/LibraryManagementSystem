@@ -1,9 +1,12 @@
 FROM jenkins/jenkins:lts
 USER root
 
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y wget apt-transport-https software-properties-common gnupg curl
+
 # Add the Eclipse Temurin package repository
-RUN apt-get update && apt-get install -y wget apt-transport-https software-properties-common gnupg && \
-    wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - && \
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - && \
     echo "deb https://packages.adoptium.net/artifactory/deb $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/adoptium.list && \
     apt-get update && \
     apt-get install -y temurin-17-jdk
@@ -11,5 +14,9 @@ RUN apt-get update && apt-get install -y wget apt-transport-https software-prope
 # Install Docker CLI
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     sh get-docker.sh
+
+RUN if ! getent group docker; then groupadd -g 999 docker; fi
+
+RUN usermod -aG docker jenkins
 
 USER jenkins
