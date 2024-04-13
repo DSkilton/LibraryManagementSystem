@@ -9,7 +9,7 @@ FROM eclipse-temurin
 # Sets the working directory for any RUN, CMD, ENTRYPOINT, COPY, and ADD instructions that follow
 WORKDIR /app
 
-COPY LibMan/build/libs/librarymanagement-0.0.1-SNAPSHOT.jar app.jar
+COPY librarymanagementsystem/build/libs/librarymanagement-0.0.1-SNAPSHOT.jar app.jar
 
 RUN ls -la /app/*
 
