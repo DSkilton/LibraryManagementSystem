@@ -17,7 +17,7 @@ pipeline {
         stage('Clone repository') {
             steps {
                 echo 'Cloning the repository...'
-                dir('LibMan') {
+                dir('librarymanagementsystem') {
                     git branch: 'master',
                      url: 'https://github.com/DSkilton/LibraryManagementSystem'
                 }
@@ -27,7 +27,7 @@ pipeline {
         stage('Check Environment') {
             steps {
                 script {
-                    dir('LibMan') {
+                    dir('librarymanagementsystem') {
                         sh 'pwd'
                         sh 'ls -l build/libs/'
                     }
@@ -35,13 +35,27 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Verify Gradlew Configuration') {
             steps {
                 script {
-                    dir('LibMan') {
+                    sh '''
+                    ls -l gradlew
+                    ./gradlew --version
+                    '''
+                }
+            }
+        }
+
+        stage('Build and Check Environment') {
+            steps {
+                script {
+                    dir('librarymanagementsystem') {
+                        echo "Running Gradle clean build..."
                         sh './gradlew clean build'
+                        echo "Current directory post-build: ${pwd()}"
+                        sh 'ls -l build/libs/'
                         echo "Building Docker image ${env.DOCKER_IMAGE}..."
-                        docker.build(env.DOCKER_IMAGE, ".")
+                        docker.build(env.DOCKER_IMAGE, "build/libs")
                     }
                 }
             }
