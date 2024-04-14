@@ -89,19 +89,7 @@ pipeline {
             }
         }
 
-        stage('Publish Docker Image') {
-            steps {
-                script {
-                    echo "Publishing Docker image..."
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image(env.DOCKER_IMAGE).push()
-                        echo "Docker image published."
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
+        /* stage('Deploy to Kubernetes') {
             steps {
                 script {
                     echo 'Deploying to Kubernetes...'
@@ -112,7 +100,7 @@ pipeline {
                     echo "Deployment to Kubernetes initiated."
                 }
             }
-        }
+        } */
     }
 
     post {
