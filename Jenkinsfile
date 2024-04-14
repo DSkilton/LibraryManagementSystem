@@ -52,7 +52,7 @@ pipeline {
                         sh '''
                         ./gradlew clean build
                         echo "Displaying directory structure post-build..."
-                        find . -type f -print
+                        find . -type f -print | grep -v "\\.git"
                         echo "Listing build artifacts..."
                         ls -l build/libs/
                         '''
@@ -70,11 +70,9 @@ pipeline {
                         echo "Checking build environment..."
                         sh 'pwd'
                         echo "List files and their permissions"
-                        sh 'ls -al'
-
+                        sh 'ls -al | grep -v "/$" '
                         echo "List files and their permissions in build/libs/"
-                        sh 'ls -l build/libs/'
-                    }
+                        sh 'ls -al | grep -v "/$" '                    }
                 }
             }
         }
