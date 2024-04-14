@@ -34,6 +34,8 @@ pipeline {
                         sh '''
                         echo "Checking gradlew permissions..."
                         ls -l gradlew
+                        chmod +x gradlew
+                        ls -l gradlew
                         echo "Verifying Gradle wrapper execution..."
                         ./gradlew --version
                         '''
