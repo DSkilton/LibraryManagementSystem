@@ -44,23 +44,7 @@ pipeline {
             }
         }
 
-        stage('Check Environment') {
-            steps {
-                script {
-                    dir('librarymanagementsystem') {
-                        echo "Checking build environment..."
-                        sh 'pwd'
-                        echo "List files and their permissions"
-                        sh 'ls -al'
-
-                        echo "List files and their permissions in build/libs/"
-                        sh 'ls -l build/libs/'
-                    }
-                }
-            }
-        }
-
-        stage('Build and Check Environment') {
+        stage('Build Environment') {
             steps {
                 script {
                     dir('librarymanagementsystem') {
@@ -74,6 +58,22 @@ pipeline {
                         '''
                         echo "Building Docker image ${env.DOCKER_IMAGE}..."
                         docker.build(env.DOCKER_IMAGE, '.')
+                    }
+                }
+            }
+        }
+
+        stage('Check Environment') {
+            steps {
+                script {
+                    dir('librarymanagementsystem') {
+                        echo "Checking build environment..."
+                        sh 'pwd'
+                        echo "List files and their permissions"
+                        sh 'ls -al'
+
+                        echo "List files and their permissions in build/libs/"
+                        sh 'ls -l build/libs/'
                     }
                 }
             }
