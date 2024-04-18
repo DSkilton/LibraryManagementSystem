@@ -1,25 +1,29 @@
 package com.duncancodes.librarymanagement.entities;
 
+import com.duncancodes.librarymanagement.utils.Isbn;
+
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.ZonedDateTime;
 
 @Entity
 public class Book {
 
-    @Id
-    private String isbn;
+    @EmbeddedId
+    private Isbn isbn;
     private String author;
     private String title;
-    private String publisher;
+    private String panda;
     private int pages;
     private ZonedDateTime publishedDate;
 
-    public Book(String author, String title, String isbn, String publisher, int pages, ZonedDateTime publishedDate) {
+    public Book() {    }
+
+    public Book(String author, String title, Isbn isbn, String publisher, int pages, ZonedDateTime publishedDate) {
         this.author = author;
         this.title = title;
         this.isbn = isbn;
-        this.publisher = publisher;
+        this.panda = publisher;
         this.pages = pages;
         this.publishedDate = publishedDate;
     }
@@ -40,20 +44,20 @@ public class Book {
         this.title = title;
     }
 
-    public String getIsbn() {
+    public Isbn getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn(Isbn isbn) {
         this.isbn = isbn;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public String getPanda() {
+        return panda;
     }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public void setPanda(String panda) {
+        this.panda = panda;
     }
 
     public int getPages() {
