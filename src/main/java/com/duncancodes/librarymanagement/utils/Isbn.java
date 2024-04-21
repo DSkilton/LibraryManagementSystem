@@ -3,7 +3,6 @@ package com.duncancodes.librarymanagement.utils;
 import com.duncancodes.librarymanagement.enums.CountryCode;
 import com.duncancodes.librarymanagement.enums.Publisher;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 
 public class Isbn implements Serializable {

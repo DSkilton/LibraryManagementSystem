@@ -3,7 +3,12 @@
 	import com.duncancodes.librarymanagement.utils.Address;
 	import com.duncancodes.librarymanagement.utils.Contact;
 
-	import javax.persistence.*;
+	import javax.persistence.Entity;
+	import javax.persistence.Table;
+	import javax.persistence.Id;
+	import javax.persistence.GeneratedValue;
+	import javax.persistence.GenerationType;
+	import javax.persistence.Embedded;
 
 	@Entity
 	@Table(name = "users")
