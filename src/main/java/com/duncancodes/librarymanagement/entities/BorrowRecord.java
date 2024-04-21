@@ -9,20 +9,20 @@ import java.util.List;
 @Entity
 public class BorrowRecord {
 
-    @Id
-    private int id;
+	@Id
+	private int id;
 
-    private HashMap<User, List<Book>> borrowedBooks = new HashMap<>();
+	private HashMap<User, List<Book>> borrowedBooks = new HashMap<>();
 
-    public BorrowRecord(HashMap<User, List<Book>> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
+	public BorrowRecord(HashMap<User, List<Book>> borrowedBooks) {
+		this.borrowedBooks = borrowedBooks;
+	}
 
-    public HashMap<User, List<Book>> getBorrowedBooks() {
-        return borrowedBooks;
-    }
+	public HashMap<User, List<Book>> getBorrowedBooks() {
+		return borrowedBooks;
+	}
 
-    public void setBorrowedBooks(HashMap<User, List<Book>> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
+	public void setBorrowedBooks(HashMap<User, List<Book>> borrowedBooks) {
+		this.borrowedBooks = borrowedBooks;
+	}
 }
