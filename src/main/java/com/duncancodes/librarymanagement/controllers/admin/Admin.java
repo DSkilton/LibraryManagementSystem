@@ -21,12 +21,12 @@ import java.rmi.ServerException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.duncancodes.librarymanagement.enums.Constant.USER_NOT_FOUND_FOR_ID;
+import static com.duncancodes.librarymanagement.utils.Constant.USER_NOT_FOUND_FOR_ID;
 
 @Controller
 @RequestMapping(value="/admin")
 public class Admin {
-	
+
 	@Autowired
 	private UserRepository userRepo;
 
