@@ -1,11 +1,9 @@
 package com.duncancodes.librarymanagement.entities;
 
 import com.duncancodes.librarymanagement.utils.Isbn;
-import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import java.time.ZonedDateTime;
 
 @Entity

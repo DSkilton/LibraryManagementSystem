@@ -5,22 +5,24 @@ import com.duncancodes.librarymanagement.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UserService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
 
 	@Autowired
-	UserRepository userRepo;
+	private UserRepository userRepo;
 
 	public User saveUser(User user) {
 		return userRepo.save(user);
 	}
 
-	public Optional<User> findByUser(String familyName) {
+	public Optional<User> findByFamilyName(String familyName) {
 		return userRepo.findByFamilyName(familyName);
 	}
 
@@ -42,5 +44,13 @@ public class UserService {
 
 		User savedUser = saveUser(user);
 		LOGGER.debug("New user created with id: {}", savedUser.getId());
+	}
+
+	public void delete(User user) {
+		userRepo.delete(user);
+	}
+
+	public User updateUser(User user) {
+		return userRepo.save(user);
 	}
 }

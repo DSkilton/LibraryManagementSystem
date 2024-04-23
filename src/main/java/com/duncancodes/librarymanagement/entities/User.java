@@ -3,12 +3,7 @@
 	import com.duncancodes.librarymanagement.utils.Address;
 	import com.duncancodes.librarymanagement.utils.Contact;
 
-	import javax.persistence.Entity;
-	import javax.persistence.Table;
-	import javax.persistence.Id;
-	import javax.persistence.GeneratedValue;
-	import javax.persistence.GenerationType;
-	import javax.persistence.Embedded;
+	import javax.persistence.*;
 
 	@Entity
 	@Table(name = "users")
@@ -16,7 +11,7 @@
 
 		@Id
 		@GeneratedValue(strategy = GenerationType.TABLE)
-		private int id;
+		private Long id;
 
 		private String title;
 		private String firstName;
@@ -38,11 +33,11 @@
 
 		public User() {		}
 
-		public int getId() {
+		public Long getId() {
 			return id;
 		}
 
-		public void setId(int id) {
+		public void setId(Long id) {
 			this.id = id;
 		}
 

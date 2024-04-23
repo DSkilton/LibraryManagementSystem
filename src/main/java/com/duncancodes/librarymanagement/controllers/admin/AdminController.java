@@ -2,18 +2,13 @@ package com.duncancodes.librarymanagement.controllers.admin;
 
 import com.duncancodes.librarymanagement.entities.User;
 import com.duncancodes.librarymanagement.exceptions.RecordNotFoundException;
-import com.duncancodes.librarymanagement.repositories.UserRepository;
 import com.duncancodes.librarymanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +21,7 @@ import static com.duncancodes.librarymanagement.utils.Constant.USER_NOT_FOUND_FO
 
 @Controller
 @RequestMapping(value="/admin")
-public class Admin {
+public class AdminController {
 
 	@Autowired
 	private UserService userService;
@@ -59,19 +54,12 @@ public class Admin {
 	}
 
 	@DeleteMapping(value="user/{id}")
-	public HttpStatus deleteUser(@PathVariable Long id) throws RecordNotFoundException {
-		Optional<User> optionalUser = userService.findById(id);
-
-		optionalUser.ifPresent(optionalUser -> {
-			User user = optionalUser;
-
-		} );
-
-		try {
-			userRepo.delete(user);
-			return HttpStatus.OK;
-		} catch (Exception e) {
-			throw new RecordNotFoundException(USER_NOT_FOUND_FOR_ID, id);
-		}
+	public ResponseEntity deleteUser(@PathVariable Long id) throws RecordNotFoundException {
+		return userService.findById(id)
+			.map(user -> {
+				userService.delete(user);
+				return ResponseEntity.ok().build();
+			})
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_FOR_ID));
 	}
 }

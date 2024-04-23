@@ -2,7 +2,6 @@ package com.duncancodes.librarymanagement.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
 import java.util.HashMap;
 import java.util.List;
 
