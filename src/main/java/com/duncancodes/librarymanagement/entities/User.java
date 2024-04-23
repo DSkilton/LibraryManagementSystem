@@ -36,6 +36,8 @@
 			this.contact = contact;
 		}
 
+		public User() {		}
+
 		public int getId() {
 			return id;
 		}

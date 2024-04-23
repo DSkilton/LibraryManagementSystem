@@ -1,9 +1,11 @@
 package com.duncancodes.librarymanagement.entities;
 
 import com.duncancodes.librarymanagement.utils.Isbn;
+import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -13,19 +15,19 @@ public class Book {
 	private Isbn isbn;
 	private String author;
 	private String title;
-	private String panda;
 	private int pages;
 	private ZonedDateTime publishedDate;
+	private Boolean isBorrowed;
 
 	public Book() {	}
 
-	public Book(String author, String title, Isbn isbn, String publisher, int pages, ZonedDateTime publishedDate) {
+	public Book(String author, String title, Isbn isbn, int pages, ZonedDateTime publishedDate, Boolean isBorrowed) {
 		this.author = author;
 		this.title = title;
 		this.isbn = isbn;
-		this.panda = publisher;
 		this.pages = pages;
 		this.publishedDate = publishedDate;
+		this.isBorrowed = isBorrowed;
 	}
 
 	public String getAuthor() {
@@ -52,14 +54,6 @@ public class Book {
 		this.isbn = isbn;
 	}
 
-	public String getPanda() {
-		return panda;
-	}
-
-	public void setPanda(String panda) {
-		this.panda = panda;
-	}
-
 	public int getPages() {
 		return pages;
 	}
@@ -76,15 +70,23 @@ public class Book {
 		this.publishedDate = publishedDate;
 	}
 
+	public Boolean getBorrowed() {
+		return isBorrowed;
+	}
+
+	public void setBorrowed(Boolean borrowed) {
+		isBorrowed = borrowed;
+	}
+
 	@Override
 	public String toString() {
 		return "Book{"
 			+ "isbn=" + isbn
 			+ ", author='" + author + '\''
 			+ ", title='" + title + '\''
-			+ ", panda='" + panda + '\''
 			+ ", pages=" + pages
 			+ ", publishedDate=" + publishedDate
+			+ ", isBorrowed=" + isBorrowed
 			+ '}';
 	}
 }

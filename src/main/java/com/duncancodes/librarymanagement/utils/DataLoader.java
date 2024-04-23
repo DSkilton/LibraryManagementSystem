@@ -40,7 +40,7 @@ public class DataLoader implements CommandLineRunner {
 			String publisher = BookGenerator.publishers[rand];
 			int pages = ThreadLocalRandom.current().nextInt(500)+100;
 			ZonedDateTime publishedDate = ZonedDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(365 * 10));
-			Book book = new Book(author, title, isbn, publisher, pages, publishedDate);
+			Book book = new Book(author, title, isbn, pages, publishedDate, false);
 
 			bookRepository.save(book);
 		}
