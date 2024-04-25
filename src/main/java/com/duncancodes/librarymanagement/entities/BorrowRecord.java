@@ -1,7 +1,10 @@
 package com.duncancodes.librarymanagement.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.duncancodes.librarymanagement.repositories.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,19 +12,34 @@ import java.util.List;
 public class BorrowRecord {
 
 	@Id
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	private HashMap<User, List<Book>> borrowedBooks = new HashMap<>();
+	@ManyToOne
+	@JoinColumn(name = "userid")
+	private User user;
 
-	public BorrowRecord(HashMap<User, List<Book>> borrowedBooks) {
-		this.borrowedBooks = borrowedBooks;
+	@OneToMany
+	private List<Book> books;
+
+	public BorrowRecord(User user, List<Book> books) {
+		this.user = user;
+		this.books = books;
 	}
 
-	public HashMap<User, List<Book>> getBorrowedBooks() {
-		return borrowedBooks;
+	public User getUser() {
+		return user;
 	}
 
-	public void setBorrowedBooks(HashMap<User, List<Book>> borrowedBooks) {
-		this.borrowedBooks = borrowedBooks;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Book> getBooks(Long userId) {
+		return books == null ? new ArrayList<>() : books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 }
