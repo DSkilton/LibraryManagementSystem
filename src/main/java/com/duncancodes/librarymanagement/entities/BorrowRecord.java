@@ -1,11 +1,7 @@
 package com.duncancodes.librarymanagement.entities;
 
-import com.duncancodes.librarymanagement.repositories.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Entity
