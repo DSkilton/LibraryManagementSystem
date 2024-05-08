@@ -36,9 +36,9 @@ public class UserController {
 
 		if (user != null) {
 			URI location = ServletUriComponentsBuilder.fromRequestUri(request)
-					.path("/{id}")
-					.buildAndExpand(user.getId())
-					.toUri();
+				.path("/{id}")
+				.buildAndExpand(user.getId())
+				.toUri();
 			return ResponseEntity.created(location).body(user);
 		} else {
 			throw new ServerException("Error in creating the User resource. Try again");

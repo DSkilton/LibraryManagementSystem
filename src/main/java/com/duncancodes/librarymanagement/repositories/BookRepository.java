@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Isbn> {
 	List<Book> findByAuthor(String author);
@@ -15,5 +16,6 @@ public interface BookRepository extends JpaRepository<Book, Isbn> {
 	@Query("SELECT br FROM BorrowRecord br WHERE br.user.id =?1")
 	List<Book> findUsersBorrowedBooks(Long userId);
 
+	Optional<Book> findByIsbn(Isbn isbn);
 
 }

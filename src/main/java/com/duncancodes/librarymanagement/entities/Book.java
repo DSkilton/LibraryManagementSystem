@@ -17,15 +17,18 @@ public class Book {
 	private ZonedDateTime publishedDate;
 	private Boolean isBorrowed;
 
+	private Boolean isActive;
+
 	public Book() {	}
 
-	public Book(String author, String title, Isbn isbn, int pages, ZonedDateTime publishedDate, Boolean isBorrowed) {
+	public Book(String author, String title, Isbn isbn, int pages, ZonedDateTime publishedDate, Boolean isBorrowed, Boolean isActive) {
 		this.author = author;
 		this.title = title;
 		this.isbn = isbn;
 		this.pages = pages;
 		this.publishedDate = publishedDate;
 		this.isBorrowed = isBorrowed;
+		this.isActive = isActive;
 	}
 
 	public String getAuthor() {
@@ -74,6 +77,14 @@ public class Book {
 
 	public void setBorrowed(Boolean borrowed) {
 		isBorrowed = borrowed;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean active) {
+		isActive = active;
 	}
 
 	@Override

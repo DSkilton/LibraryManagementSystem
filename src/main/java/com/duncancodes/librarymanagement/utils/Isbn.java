@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Isbn implements Serializable {
 
-	private int IsbnCode = 979; //or 978 for books older than 10 years
+	private Long IsbnCode = 979l; //or 978 for books older than 10 years
 	private CountryCode countryGroup;
 	private Publisher publisher;
 	private int TitleEditionFormat;
@@ -22,8 +22,12 @@ public class Isbn implements Serializable {
 		this.checkDigit = checkDigit;
 	}
 
-	public int getIsbnCode() {
+	public Long getIsbnCode() {
 		return IsbnCode;
+	}
+
+	public void setIsbnCode(Long isbnCode) {
+		IsbnCode = isbnCode;
 	}
 
 	public CountryCode getCountryGroup() {
