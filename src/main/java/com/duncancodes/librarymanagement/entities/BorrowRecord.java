@@ -11,16 +11,20 @@ public class BorrowRecord {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "userid")
 	private User user;
 
-	@OneToMany
-	private List<Book> books;
+	@OneToOne
+	private Book book;
 
-	public BorrowRecord(User user, List<Book> books) {
+	public BorrowRecord(User user, Book book) {
 		this.user = user;
-		this.books = books;
+		this.book = book;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public User getUser() {
@@ -31,11 +35,11 @@ public class BorrowRecord {
 		this.user = user;
 	}
 
-	public List<Book> getBooks(Long userId) {
-		return books == null ? new ArrayList<>() : books;
+	public Book getBooks(Long userId) {
+		return book;
 	}
 
-	public void setBooks(List<Book> books) {
-		this.books = books;
+	public void setBooks(Book book) {
+		this.book = book;
 	}
 }

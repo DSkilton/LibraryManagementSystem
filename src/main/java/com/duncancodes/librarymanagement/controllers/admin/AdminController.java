@@ -42,7 +42,7 @@ public class AdminController {
 	}
 
 	@GetMapping(value="/retrieveAllUsers")
-	public ResponseEntity<List<User>> retrieve() {
+	public ResponseEntity<List<User>> retrieveAll() {
 		List<User> users = userService.findAll();
 		return ResponseEntity.ok(users);
 	}
