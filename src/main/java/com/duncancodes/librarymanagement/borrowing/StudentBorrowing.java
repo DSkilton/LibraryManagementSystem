@@ -1,6 +1,5 @@
 package com.duncancodes.librarymanagement.borrowing;
 
-import com.duncancodes.librarymanagement.entities.BorrowRecord;
 import com.duncancodes.librarymanagement.entities.User;
 import com.duncancodes.librarymanagement.services.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;

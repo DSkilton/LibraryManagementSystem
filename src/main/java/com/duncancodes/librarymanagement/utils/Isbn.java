@@ -18,7 +18,7 @@ public class Isbn implements Serializable {
 	public Isbn(CountryCode countryGroup, Publisher publisher, int titleEditionFormat, int checkDigit) {
 		this.countryGroup = countryGroup;
 		this.publisher = publisher;
-		TitleEditionFormat = titleEditionFormat;
+		this.TitleEditionFormat = titleEditionFormat;
 		this.checkDigit = checkDigit;
 	}
 
