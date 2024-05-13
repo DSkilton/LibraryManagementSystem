@@ -1,4 +1,4 @@
-package com.duncancodes.librarymanagement.borrowing;
+package com.duncancodes.librarymanagement.strategies;
 
 import com.duncancodes.librarymanagement.entities.User;
 

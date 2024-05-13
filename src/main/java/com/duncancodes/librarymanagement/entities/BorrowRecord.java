@@ -1,5 +1,7 @@
 package com.duncancodes.librarymanagement.entities;
 
+import com.duncancodes.librarymanagement.repositories.BorrowRepository;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +20,12 @@ public class BorrowRecord {
 	@OneToOne
 	private Book book;
 
-	public BorrowRecord(User user, Book book) {
+	private Boolean isBorrowed;
+
+	public BorrowRecord(User user, Book book, Boolean isBorrowed) {
 		this.user = user;
 		this.book = book;
+		this.isBorrowed = isBorrowed;
 	}
 
 	public Long getId() {
@@ -35,11 +40,11 @@ public class BorrowRecord {
 		this.user = user;
 	}
 
-	public Book getBooks(Long userId) {
+	public Book getBook(Long userId) {
 		return book;
 	}
 
-	public void setBooks(Book book) {
+	public void setBook(Book book) {
 		this.book = book;
 	}
 }

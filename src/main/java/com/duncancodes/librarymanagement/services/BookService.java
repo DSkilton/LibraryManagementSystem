@@ -4,7 +4,6 @@ import com.duncancodes.librarymanagement.entities.Book;
 import com.duncancodes.librarymanagement.repositories.BookRepository;
 import com.duncancodes.librarymanagement.utils.Isbn;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,12 +18,16 @@ public class BookService {
 	@Autowired
 	private BookRepository bookRepo;
 
-	public Book saveBook(Book book) {
+	public Book save(Book book) {
 		return bookRepo.save(book);
 	}
 
 	public List<Book> getBooksByAuthor(String author) {
 		return bookRepo.findByAuthor(author);
+	}
+
+	public Optional<Book> getBookByIsbn(Isbn isbn) {
+		return bookRepo.findByIsbn(isbn);
 	}
 
 	public List<Book> getAvailableBooks() {
@@ -70,23 +73,28 @@ public class BookService {
 		return bookRepo.save(originalBook);
 	}
 
-	public void hardDelete(Isbn isbn) {
+	public Boolean hardDelete(Isbn isbn) {
 		Optional<Book> optionalBook = bookRepo.findByIsbn(isbn);
 
 		if (optionalBook.isPresent()) {
 			Book book = optionalBook.get();
-
 			bookRepo.delete(book);
+			return true;
 		}
+
+		return false;
 	}
 
-	public void softDelete(Isbn isbn) {
+	public Boolean softDelete(Isbn isbn) {
 		Optional<Book> optionalBook = bookRepo.findByIsbn(isbn);
 
 		if (optionalBook.isPresent()) {
 			Book book = optionalBook.get();
 			book.setIsActive(false);
 			bookRepo.save(book);
+			return true;
 		}
+
+		return false;
 	}
 }

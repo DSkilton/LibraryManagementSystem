@@ -1,4 +1,4 @@
-package com.duncancodes.librarymanagement.returning;
+package com.duncancodes.librarymanagement.fines;
 
 public class HalfTermFine extends BasicFine {
 

@@ -3,7 +3,7 @@ package com.duncancodes.librarymanagement.services;
 import com.duncancodes.librarymanagement.entities.Book;
 import com.duncancodes.librarymanagement.entities.BorrowRecord;
 import com.duncancodes.librarymanagement.entities.User;
-import com.duncancodes.librarymanagement.repositories.BookRepository;
+import com.duncancodes.librarymanagement.exceptions.RecordNotFoundException;
 import com.duncancodes.librarymanagement.repositories.BorrowRepository;
 import com.duncancodes.librarymanagement.utils.Isbn;
 import org.slf4j.Logger;
@@ -11,31 +11,81 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class BorrowService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BorrowService.class);
 
 	@Autowired
-	private BookRepository bookRepository;
-
-	@Autowired
-	private BorrowRepository borrowRepo;
+	private BookService bookService;
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private BookService bookService;
+	private BorrowRepository borrowRepository;
 
 	public List<Book> getBorrowedBooks(Long userId) {
-		return bookRepository.findUsersBorrowedBooks(userId);
+		return borrowRepository.findUsersBorrowedBooksByUserId(userId, true);
 	}
 
-	public void removeBookFromBorrowRecord(BorrowRecord borrowRecord) {
-		List<Book> borrowedBooks = bookRepository.findUsersBorrowedBooks(borrowRecord.getUser().getId());
+	public String borrowBook(User user, Book book) throws RecordNotFoundException {
+		BorrowRecord borrowRecord = new BorrowRecord(user, book, true);
+
+		try {
+			if ( borrowRepository.save(borrowRecord) != null ) {
+				return "Success";
+			}
+		} catch (Exception e) {
+			throw new RecordNotFoundException("Unable to create borrow record", -1l);
+
+		}
+		return "";
+	}
+
+	public String returnBook(Long userId, Isbn isbn) throws RecordNotFoundException {
+		if (userId < 0) {
+			throw new RecordNotFoundException("UserId not found", userId);
+		}
+
+		if (isbn.getIsbnCode() < 0) {
+			throw new RecordNotFoundException("BookId not found", isbn.getIsbnCode());
+		}
+
+		Optional<User> optionalUser = userService.findById(userId);
+		if(!optionalUser.isPresent()) {
+			throw new RecordNotFoundException("UserId not found", userId);
+		}
+		User user = optionalUser.get();
+
+		Optional<Book> optionalBook = bookService.findByIsbn(isbn);
+		if (!optionalBook.isPresent()) {
+			throw new RecordNotFoundException("Book not found", isbn.getIsbnCode());
+		}
+
+		Book book = optionalBook.get();
+		List<Book> borrowedBooks = borrowRepository.findUsersBorrowedBooksByUserId(userId, true);
+		if (!borrowedBooks.contains(book)) {
+			return "UserId: {}, has not borrowed Book: {}" + userId + book;
+		}
+
+		Optional<BorrowRecord> optionalBorrowRecord = borrowRepository.findUsersBorrowedBook(user, book);
+		if (!optionalBorrowRecord.isPresent()) {
+			return "BorrowRecord not found for UserId: " + user.getId();
+		}
+		BorrowRecord borrowRecord = optionalBorrowRecord.get();
+		book.setBorrowed(false);
+		borrowRecord.setBook(book);
+		borrowRepository.save(borrowRecord);
+		return "Success";
+	}
+
+	private Book getBook(Isbn isbn) {
+		return bookService.getBookByIsbn(isbn).orElseThrow();
 	}
 
 	public String borrowBook(Long userId, Isbn isbn) {
@@ -51,15 +101,11 @@ public class BorrowService {
 				Book book = optionalBook.get();
 				book.setBorrowed(true);
 
-				BorrowRecord borrowRecord = new BorrowRecord(user, book);
-				BorrowRecord savedBorrowRecord = borrowRepo.save(borrowRecord);
+				BorrowRecord borrowRecord = new BorrowRecord(user, book, true);
+				BorrowRecord savedBorrowRecord = borrowRepository.save(borrowRecord);
 				LOGGER.debug("Created BorrowRecord with Id: {} ", savedBorrowRecord.getId());
 			}
 		}
 		return "Successful";
-	}
-
-	public String returnBook(Long userId, Long bookId) {
-		return "";
 	}
 }

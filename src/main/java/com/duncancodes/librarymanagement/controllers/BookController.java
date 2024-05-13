@@ -2,6 +2,7 @@ package com.duncancodes.librarymanagement.controllers;
 
 import com.duncancodes.librarymanagement.entities.Book;
 import com.duncancodes.librarymanagement.services.BookService;
+import com.duncancodes.librarymanagement.services.managers.BookManager;
 import com.duncancodes.librarymanagement.utils.Isbn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,29 +17,29 @@ import java.util.Optional;
 public class BookController {
 
 	@Autowired
-	private BookService bookService;
+	private BookManager bookManager;
 
 	@GetMapping
 	public ResponseEntity<List<Book>> getAllBooks() {
-		List<Book> allBooks = bookService.getAllBooks();
+		List<Book> allBooks = bookManager.getAllBooks();
 		return ResponseEntity.ok(allBooks);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getBookByIsbn(@PathVariable Isbn isbn) {
-		Optional<Book> optionalBook = bookService.findByIsbn(isbn);
+		Optional<Book> optionalBook = bookManager.findByIsbn(isbn);
 		return optionalBook.map(book -> ResponseEntity.ok(book)).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PostMapping("/addBook")
 	public ResponseEntity<Book> saveBook(@RequestBody Book book) {
-		Book savedBook = bookService.saveBook(book);
+		Book savedBook = bookManager.save(book);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
 	}
 
 	@PutMapping("/updateBook")
 	public ResponseEntity<Book> updatedBook(@RequestBody Book book) {
-		Book updatedBook = bookService.updateBook(book);
+		Book updatedBook = bookManager.updateBook(book);
 
 		if (updatedBook != null) {
 			return ResponseEntity.ok(updatedBook);
@@ -50,9 +51,9 @@ public class BookController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity deleteBook(@PathVariable Isbn isbn, @RequestParam(defaultValue = "false") boolean hardDelete) {
 		if (hardDelete) {
-			bookService.hardDelete(isbn);
+			bookManager.hardDelete(isbn);
 		} else {
-			bookService.softDelete(isbn);
+			bookManager.softDelete(isbn);
 		}
 		return ResponseEntity.ok().build();
 	}
