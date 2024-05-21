@@ -4,6 +4,11 @@ import com.duncancodes.librarymanagement.entities.Book;
 import com.duncancodes.librarymanagement.entities.BorrowRecord;
 import com.duncancodes.librarymanagement.entities.User;
 import com.duncancodes.librarymanagement.exceptions.RecordNotFoundException;
+import com.duncancodes.librarymanagement.fines.HalfTermFine;
+import com.duncancodes.librarymanagement.fines.LateReturnService;
+import com.duncancodes.librarymanagement.notifications.Notification;
+import com.duncancodes.librarymanagement.notifications.NotificationFactory;
+import com.duncancodes.librarymanagement.notifications.NotificationType;
 import com.duncancodes.librarymanagement.repositories.BorrowRepository;
 import com.duncancodes.librarymanagement.utils.Isbn;
 import org.slf4j.Logger;
@@ -12,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,20 +40,6 @@ public class BorrowService {
 		return borrowRepository.findUsersBorrowedBooksByUserId(userId, true);
 	}
 
-	public String borrowBook(User user, Book book) throws RecordNotFoundException {
-		BorrowRecord borrowRecord = new BorrowRecord(user, book, true);
-
-		try {
-			if ( borrowRepository.save(borrowRecord) != null ) {
-				return "Success";
-			}
-		} catch (Exception e) {
-			throw new RecordNotFoundException("Unable to create borrow record", -1l);
-
-		}
-		return "";
-	}
-
 	public String returnBook(Long userId, Isbn isbn) throws RecordNotFoundException {
 		if (userId < 0) {
 			throw new RecordNotFoundException("UserId not found", userId);
@@ -57,7 +50,7 @@ public class BorrowService {
 		}
 
 		Optional<User> optionalUser = userService.findById(userId);
-		if(!optionalUser.isPresent()) {
+		if (!optionalUser.isPresent()) {
 			throw new RecordNotFoundException("UserId not found", userId);
 		}
 		User user = optionalUser.get();
@@ -81,6 +74,16 @@ public class BorrowService {
 		book.setBorrowed(false);
 		borrowRecord.setBook(book);
 		borrowRepository.save(borrowRecord);
+
+		long daysLate = ChronoUnit.DAYS.between(borrowRecord.getDueDate(), ZonedDateTime.now());
+		if (daysLate > 0) {
+			LateReturnService lateReturnService = new HalfTermFine(); // Or any other strategy based on the context
+			double lateFee = lateReturnService.calculateLateFee((int) daysLate);
+			// Notify user about the late fee
+			Notification notification = NotificationFactory.createNotification(NotificationType.EMAIL);
+			notification.sendNotification("You have a late fee of " + lateFee + " for returning the book late.");
+
+		}
 		return "Success";
 	}
 
@@ -90,22 +93,17 @@ public class BorrowService {
 
 	public String borrowBook(Long userId, Isbn isbn) {
 		Optional<User> optionalUser = userService.findById(userId);
+		Optional<Book> optionalBook = bookService.findByIsbn(isbn);
 
-		if (!optionalUser.isPresent()) {
-			return "Unsuccessful";
-		} else {
+		if (optionalUser.isPresent() && optionalBook.isPresent()) {
 			User user = optionalUser.get();
-			Optional<Book> optionalBook = bookService.findByIsbn(isbn);
+			Book book = optionalBook.get();
+			book.setBorrowed(true);
 
-			if (optionalBook.isPresent()) {
-				Book book = optionalBook.get();
-				book.setBorrowed(true);
-
-				BorrowRecord borrowRecord = new BorrowRecord(user, book, true);
-				BorrowRecord savedBorrowRecord = borrowRepository.save(borrowRecord);
-				LOGGER.debug("Created BorrowRecord with Id: {} ", savedBorrowRecord.getId());
-			}
+			BorrowRecord borrowRecord = new BorrowRecord(user, book, true, ZonedDateTime.now(), ZonedDateTime.now().plusDays(14));
+			borrowRepository.save(borrowRecord);
+			return "Success";
 		}
-		return "Successful";
+		return "Unsuccessful";
 	}
 }

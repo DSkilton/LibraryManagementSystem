@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/return")
-public class Return {
+public class ReturnController {
 
 	@Autowired
 	private BorrowService borrowService;

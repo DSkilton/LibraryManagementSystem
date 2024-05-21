@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/borrow")
-public class Borrow {
+public class BorrowController {
 
 	@Autowired
 	private BorrowService borrowService;
@@ -23,5 +23,7 @@ public class Borrow {
 			}
 		return ResponseEntity.badRequest().body(result);
 	}
+
+	
 
 }
