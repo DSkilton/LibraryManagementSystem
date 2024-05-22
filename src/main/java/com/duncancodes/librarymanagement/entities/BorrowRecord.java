@@ -25,11 +25,6 @@ public class BorrowRecord {
 	private Boolean isActive;
 	private String status;
 
-	public BorrowRecord() {
-		this.isActive = true;
-		this.status = "BORROWED";
-	}
-
 	public BorrowRecord(User user, Book book, ZonedDateTime borrowDate, ZonedDateTime dueDate) {
 		this.user = user;
 		this.book = book;
@@ -39,14 +34,6 @@ public class BorrowRecord {
 		this.status = "BORROWED";
 	}
 
-	public BorrowRecord(User user, Book book, boolean b, ZonedDateTime now, ZonedDateTime dueDate) {
-		this.user = user;
-		this.book = book;
-		this.borrowDate = now;
-		this.dueDate = dueDate;
-	}
-
-	// Getters and setters
 	public Long getId() {
 		return id;
 	}
@@ -107,7 +94,6 @@ public class BorrowRecord {
 		this.status = status;
 	}
 
-	// Additional methods
 	public boolean isOverdue() {
 		return ZonedDateTime.now().isAfter(this.dueDate);
 	}
@@ -115,7 +101,7 @@ public class BorrowRecord {
 	public double calculateFine() {
 		if (this.returnDate != null && this.returnDate.isAfter(this.dueDate)) {
 			long daysLate = ZonedDateTime.now().until(this.returnDate, ChronoUnit.DAYS);
-			return daysLate * 1.5; // Example fine calculation
+			return daysLate * 1.5;
 		}
 		return 0.0;
 	}

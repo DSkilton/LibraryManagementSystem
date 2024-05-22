@@ -2,6 +2,6 @@ package com.duncancodes.librarymanagement.strategies;
 
 import com.duncancodes.librarymanagement.entities.User;
 
-public interface BorrowingStratergy {
+public interface BorrowingStrategy {
 	boolean checkIfEligible(User user);
 }

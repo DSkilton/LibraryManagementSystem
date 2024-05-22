@@ -1,6 +1,6 @@
 package com.duncancodes.librarymanagement.notifications;
 
-public abstract class Notification {
+public interface Notification {
 
-	public abstract void sendNotification (String message);
+	void sendNotification(String message);
 }

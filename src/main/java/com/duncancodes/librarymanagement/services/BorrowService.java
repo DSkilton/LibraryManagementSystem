@@ -63,7 +63,7 @@ public class BorrowService {
 		Book book = optionalBook.get();
 		List<Book> borrowedBooks = borrowRepository.findUsersBorrowedBooksByUserId(userId, true);
 		if (!borrowedBooks.contains(book)) {
-			return "UserId: {}, has not borrowed Book: {}" + userId + book;
+			return "UserId: " + userId + ", has not borrowed Book: " + book;
 		}
 
 		Optional<BorrowRecord> optionalBorrowRecord = borrowRepository.findUsersBorrowedBook(user, book);
@@ -82,7 +82,6 @@ public class BorrowService {
 			// Notify user about the late fee
 			Notification notification = NotificationFactory.createNotification(NotificationType.EMAIL);
 			notification.sendNotification("You have a late fee of " + lateFee + " for returning the book late.");
-
 		}
 		return "Success";
 	}
@@ -100,7 +99,7 @@ public class BorrowService {
 			Book book = optionalBook.get();
 			book.setBorrowed(true);
 
-			BorrowRecord borrowRecord = new BorrowRecord(user, book, true, ZonedDateTime.now(), ZonedDateTime.now().plusDays(14));
+			BorrowRecord borrowRecord = new BorrowRecord(user, book, ZonedDateTime.now(), ZonedDateTime.now().plusDays(14));
 			borrowRepository.save(borrowRecord);
 			return "Success";
 		}

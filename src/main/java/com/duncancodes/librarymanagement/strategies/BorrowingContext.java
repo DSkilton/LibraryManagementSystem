@@ -3,9 +3,9 @@ package com.duncancodes.librarymanagement.strategies;
 import com.duncancodes.librarymanagement.entities.User;
 
 public class BorrowingContext {
-	private BorrowingStratergy stratergy;
+	private BorrowingStrategy stratergy;
 
-	public BorrowingContext(BorrowingStratergy stratergy) {
+	public BorrowingContext(BorrowingStrategy stratergy) {
 		this.stratergy = stratergy;
 	}
 
