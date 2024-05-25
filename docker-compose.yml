@@ -35,5 +35,10 @@ services:
     volumes:
       - sonarqube_db_data:/var/lib/postgresql/data
 
+  elasticsearch:
+    image: elasticsearch:8.14.0
+    container_name: elastic
+
+
 volumes:
   sonarqube_db_data:
