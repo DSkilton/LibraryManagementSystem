@@ -64,7 +64,7 @@ public class BorrowServiceTest {
 	public void testReturnBookSuccess() throws RecordNotFoundException {
 		when(userService.findById(any(Long.class))).thenReturn(Optional.of(user));
 		when(bookService.findByIsbn(any(Isbn.class))).thenReturn(Optional.of(book));
-		when(borrowRepository.findUsersBorrowedBook(any(User.class), any(Book.class))).thenReturn(Optional.of(borrowRecord));
+		when(borrowRepository.findByUserAndBook(any(User.class), any(Book.class))).thenReturn(Optional.of(borrowRecord));
 
 		String result = borrowService.returnBook(1L, isbn);
 		assertEquals("Success", result);

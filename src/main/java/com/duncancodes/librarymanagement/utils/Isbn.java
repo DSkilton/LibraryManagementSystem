@@ -3,8 +3,10 @@ package com.duncancodes.librarymanagement.utils;
 import com.duncancodes.librarymanagement.enums.CountryCode;
 import com.duncancodes.librarymanagement.enums.Publisher;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
 public class Isbn implements Serializable {
 
 	private Long IsbnCode = 979l; //or 978 for books older than 10 years

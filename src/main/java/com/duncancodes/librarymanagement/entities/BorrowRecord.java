@@ -16,14 +16,21 @@ public class BorrowRecord {
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "book_id", nullable = false)
-	private Book book;
+	@JoinColumns({
+			@JoinColumn(name = "isbnCode", referencedColumnName = "isbnCode"),
+			@JoinColumn(name = "countryGroup", referencedColumnName = "countryGroup"),
+			@JoinColumn(name = "publisher", referencedColumnName = "publisher"),
+			@JoinColumn(name = "titleEditionFormat", referencedColumnName = "titleEditionFormat"),
+			@JoinColumn(name = "checkDigit", referencedColumnName = "checkDigit")
+	})	private Book book;
 
 	private ZonedDateTime borrowDate;
 	private ZonedDateTime dueDate;
 	private ZonedDateTime returnDate;
 	private Boolean isActive;
 	private String status;
+
+	public BorrowRecord() { 	} //no arg for JPA
 
 	public BorrowRecord(User user, Book book, ZonedDateTime borrowDate, ZonedDateTime dueDate) {
 		this.user = user;

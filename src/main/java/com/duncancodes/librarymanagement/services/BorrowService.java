@@ -66,7 +66,7 @@ public class BorrowService {
 			return "UserId: " + userId + ", has not borrowed Book: " + book;
 		}
 
-		Optional<BorrowRecord> optionalBorrowRecord = borrowRepository.findUsersBorrowedBook(user, book);
+		Optional<BorrowRecord> optionalBorrowRecord = borrowRepository.findByUserAndBook(user, book);
 		if (!optionalBorrowRecord.isPresent()) {
 			return "BorrowRecord not found for UserId: " + user.getId();
 		}
